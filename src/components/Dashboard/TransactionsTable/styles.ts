@@ -2,9 +2,11 @@ import styled from "styled-components";
 
 export const Container = styled.section`
     margin-top: 6.4rem;
+    overflow-x: auto;
 
     table {
         width: 100%;
+        min-width: 100rem;
         border-spacing: 0 0.8rem;
 
         th {
@@ -32,6 +34,17 @@ export const Container = styled.section`
 
             &.withdraw {
                 color: var(--red);
+            }
+
+            &:last-child {
+                button {
+                    color: var(--red);
+
+                    transition: filter 0.2s;
+                    &:hover {
+                        filter: brightness(0.75);
+                    }
+                }
             }
         }
     }

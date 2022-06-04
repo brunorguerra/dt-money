@@ -11,12 +11,7 @@ createServer({
 
     seeds(server) {
         server.db.loadData({
-            transactions:
-                localStorage.getItem("dt-transactions") !== null
-                    ? JSON.parse(
-                          String(localStorage.getItem("dt-transactions"))
-                      )
-                    : [],
+            transactions: [],
         });
     },
 
@@ -30,19 +25,15 @@ createServer({
         this.post("/transactions", (schema, request) => {
             const data = JSON.parse(request.requestBody);
 
-            const listTransactions = schema.all("transaction").models;
-
-            if (listTransactions.length > 0) {
-                listTransactions.push(data);
-                localStorage.setItem(
-                    "dt-transactions",
-                    JSON.stringify(listTransactions)
-                );
-            } else {
-                localStorage.setItem("dt-transactions", JSON.stringify([data]));
-            }
-
             return schema.create("transaction", data);
+        });
+
+        this.delete("/transactions/:id", (schema, request) => {
+            const id = request.params.id;
+
+            schema.find("transaction", id)?.destroy();
+
+            return this.schema.all("transaction");
         });
     },
 });

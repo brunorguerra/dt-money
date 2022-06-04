@@ -30,4 +30,8 @@ export const Container = styled.section`
             color: #fff;
         }
     }
+
+    @media (max-width: 1024px) {
+        grid-template-columns: 1fr;
+    }
 `;

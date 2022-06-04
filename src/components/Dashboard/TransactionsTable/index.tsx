@@ -2,7 +2,7 @@ import { useTransactions } from "../../../contexts/TransactionsContext";
 import { Container } from "./styles";
 
 export const TransactionsTable = () => {
-    const { transactions } = useTransactions();
+    const { transactions, removeTransaction } = useTransactions();
 
     return (
         <Container>
@@ -13,6 +13,7 @@ export const TransactionsTable = () => {
                         <th>Valor</th>
                         <th>Categoria</th>
                         <th>Data</th>
+                        <th></th>
                     </tr>
                 </thead>
 
@@ -32,6 +33,15 @@ export const TransactionsTable = () => {
                                 {new Intl.DateTimeFormat("pt-BR").format(
                                     new Date(transaction.createdAt)
                                 )}
+                            </td>
+                            <td>
+                                <button
+                                    onClick={() =>
+                                        removeTransaction(transaction.id)
+                                    }
+                                >
+                                    Remover
+                                </button>
                             </td>
                         </tr>
                     ))}
