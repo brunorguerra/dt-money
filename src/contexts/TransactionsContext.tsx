@@ -44,11 +44,9 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
     }
 
     useEffect(() => {
-        return () => {
             Api.get("/transactions").then((response) =>
                 setTransactions(response.data.transactions)
             );
-        };
     }, []);
 
     return (
