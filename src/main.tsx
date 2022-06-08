@@ -18,22 +18,42 @@ createServer({
     routes() {
         this.namespace = "api";
 
-        this.get("/transactions", () => {
-            return this.schema.all("transaction");
+        this.get("/transactions", (schema, request) => {
+            const transactions = JSON.parse(
+                localStorage.getItem("dt-transactions") ?? "[]"
+            );
+
+            schema.db.loadData({
+                transactions,
+            });
+
+            return schema.all("transaction");
         });
 
         this.post("/transactions", (schema, request) => {
             const data = JSON.parse(request.requestBody);
 
-            return schema.create("transaction", data);
+            schema.create("transaction", data);
+
+            localStorage.setItem(
+                "dt-transactions",
+                JSON.stringify(schema.db.transactions)
+            );
+
+            return schema.all("transaction");
         });
 
         this.delete("/transactions/:id", (schema, request) => {
             const id = request.params.id;
 
-            schema.find("transaction", id)?.destroy();
+            schema.db.transactions.remove(id);
 
-            return this.schema.all("transaction");
+            localStorage.setItem(
+                "dt-transactions",
+                JSON.stringify(schema.db.transactions)
+            );
+
+            return schema.all("transaction");
         });
     },
 });

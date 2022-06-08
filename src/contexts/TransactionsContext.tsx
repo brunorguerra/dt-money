@@ -28,22 +28,13 @@ const TransactionsContext = createContext({} as TransactionsContextData);
 export function TransactionsProvider({ children }: TransactionsProviderProps) {
     const [transactions, setTransactions] = useState<TransactionProps[]>([]);
 
-    useEffect(() => {
-        return () => {
-            Api.get("/transactions").then((response) =>
-                setTransactions(response.data.transactions)
-            );
-        };
-    }, []);
-
     async function createTransaction(transactionInput: TransactionInput) {
         const response = await Api.post("/transactions", {
             ...transactionInput,
             createdAt: new Date(),
         });
-        const { transaction } = await response.data;
-
-        setTransactions((prevTransaction) => [...prevTransaction, transaction]);
+        const { transactions } = await response.data;
+        setTransactions(transactions);
     }
 
     async function removeTransaction(transactionId: number) {
@@ -51,6 +42,14 @@ export function TransactionsProvider({ children }: TransactionsProviderProps) {
         const { transactions: transactionsList } = await response.data;
         setTransactions(transactionsList);
     }
+
+    useEffect(() => {
+        return () => {
+            Api.get("/transactions").then((response) =>
+                setTransactions(response.data.transactions)
+            );
+        };
+    }, []);
 
     return (
         <TransactionsContext.Provider
